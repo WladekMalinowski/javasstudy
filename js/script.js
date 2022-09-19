@@ -1,32 +1,52 @@
-"use strickt"
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("form");
+  form.addEventListener("submit", formSend);
 
-// const numberOfFilms = +prompt('How many films did you watch?', '');
+  async function formSend(e) {
+    e.preventDefault();
+    let error = formValidate(form);
 
-// const personalMovieBD = {
-//     count: numberOfFilms,
-//     movies: {},
-//     actors: {},
-//     geners: [],
-//     privat: false
-// };
+    let formData = new FormData(form);
 
-// const a = prompt('What the last film did youu see?' , '');
-//       b = prompt('Please rate it', '');
-//       c = prompt('What the last film did youu see?' , '');
-//       d = prompt('Please rate it', '');
+    if (error === 0) {
+      const loading = document.querySelector(".loading");
+      loading.classList.add("active_loading");
+    }
+  }
 
-// personalMovieBD.movies[a] = b;
-// personalMovieBD.movies[c] = d;
+  function formValidate(form) {
+    let error = 0;
+    let formReq = document.querySelectorAll("._req");
 
-// console.log(personalMovieBD);
+    for (i = 0; i < formReq.length; i++) {
+      const input = formReq[i];
+      formRemoveErr(input);
 
+      if (input.classList.contains("email-req")) {
+        if (emailTest(input)) {
+          formAddErr(input);
+          error++;
+        }
+      } else {
+        if (input.value === "") {
+          formAddErr(input);
+        }
+      }
+    }
+    return error;
+  }
 
-const coffee = 6,
-      sandwich = 2,
-      juice = 1;
+  function formAddErr(input) {
+    input.classList.add("err");
+  }
 
-if (coffee === 6 && juice === 1) {
-    console.log('Go away!');
-} else {
-    console.log('Good!');
-}
+  function formRemoveErr(input) {
+    input.classList.remove("err");
+  }
+
+  function emailTest(input) {
+    return !/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(
+      input.value
+    );
+  }
+});
